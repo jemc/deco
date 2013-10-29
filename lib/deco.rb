@@ -13,6 +13,6 @@ def deco(meth, &user_block)
 end
 
 def deco_super(*args, &block)
-  return Thread.current[:__deco_stack__].pop.call(*args, &block)
+  Thread.current[:__deco_stack__].pop.call(*args, &block)
 end
 
