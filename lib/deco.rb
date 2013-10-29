@@ -1,6 +1,4 @@
 
-require 'monitor'
-
 def deco(meth, &user_block)
   m = instance_method(meth)
   
