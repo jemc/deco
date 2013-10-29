@@ -1,30 +1,18 @@
+
 require 'monitor'
-
-class DecoMethod
-  
-  attr_accessor :args
-  attr_accessor :block
-  
-  def initialize(callable)
-    @internal = callable
-  end
-  
-  def call
-    @internal.call(*@args, &block)
-  end
-end
-
 
 def deco(meth, &user_block)
   m = instance_method(meth)
   
-  define_method(meth) do |*args, &block|
-    
-    d = DecoMethod.new(m.bind(self))
-    d.args  = args
-    d.block = block
-    
-    user_block.call d
-  end
+  Thread.current[:__deco_stack__] ||= []
   
+  define_method(meth) do |*args, &block|
+    Thread.current[:__deco_stack__].push(m.bind(self))
+    user_block.call *args, &block
+  end
 end
+
+def deco_super(*args, &block)
+  return Thread.current[:__deco_stack__].pop.call(*args, &block)
+end
+
