@@ -1,4 +1,4 @@
-gemname = 'threadlock'
+gemname = 'deco'
 
 # Rebuild and push gem
 task :default => [:gp]
